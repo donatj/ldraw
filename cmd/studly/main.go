@@ -11,6 +11,7 @@ import (
 	_ "image/png"
 
 	"github.com/donatj/ldraw"
+	"github.com/nfnt/resize"
 )
 
 func init() {
@@ -38,14 +39,16 @@ func main() {
 		log.Fatal(err)
 	}
 
+	img = resize.Thumbnail(50, 50, img, resize.NearestNeighbor)
+
 	sb := img.Bounds()
 
 	fmt.Print("0 Untitled Model\r\n")
 	fmt.Print("0 Name:  Foo\r\n")
 	fmt.Print("0 Author:  \r\n")
 
-	for y := sb.Min.Y; y < sb.Max.Y; y += 10 {
-		for x := sb.Min.X; x < sb.Max.X; x += 10 {
+	for y := sb.Min.Y; y < sb.Max.Y; y += 1 {
+		for x := sb.Min.X; x < sb.Max.X; x += 1 {
 			c := img.At(x, y)
 			bc := ldraw.NearestBrickColor(c)
 
@@ -54,7 +57,7 @@ func main() {
 			r, g, b, _ := c.RGBA()
 			h += (float64(r+g+b) / (0xffff * 3)) * 30
 
-			fmt.Printf("1 %d %f %f %f 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 3005.dat\r\n", bc, float64(x*2), h, float64(y*2))
+			fmt.Printf("1 %d %f %f %f 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 3005.dat\r\n", bc, float64(x*20), h, float64(y*20))
 		}
 	}
 }
